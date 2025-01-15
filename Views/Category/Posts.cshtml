@@ -1,0 +1,23 @@
+﻿@model Small.ViewModels.CategoryPostsViewModel
+
+<h2>@Model.CategoryName</h2>
+
+@if (Model.Posts.Any())
+{
+    <ul>
+        @foreach (var post in Model.Posts)
+        {
+            <li>
+                <h4>@post.Title</h4>
+                <p>@post.Content</p>
+                <p><strong>Yorum Sayısı:</strong> @post.CommentCount</p>
+                <p><strong>Beğeni Sayısı:</strong> @post.LikeCount</p>
+                <small>Yayınlanma Tarihi: @post.CreatedAt</small>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Bu kategoriye ait makale yok.</p>
+}

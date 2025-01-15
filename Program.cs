@@ -26,6 +26,8 @@ namespace Small
 
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddScoped<CategoriesFilter>();
+
             var app = builder.Build();
 
             // Rolleri ve varsay�lan kullan�c�y� olu�tur

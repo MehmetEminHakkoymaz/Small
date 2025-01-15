@@ -419,3 +419,4 @@ C:\Users\mehme\Desktop\Small\Small\obj\Debug\net9.0\refint\Small.dll
 C:\Users\mehme\Desktop\Small\Small\obj\Debug\net9.0\Small.pdb
 C:\Users\mehme\Desktop\Small\Small\obj\Debug\net9.0\Small.genruntimeconfig.cache
 C:\Users\mehme\Desktop\Small\Small\obj\Debug\net9.0\ref\Small.dll
+C:\Users\mehme\Desktop\Small\Small\obj\Debug\net9.0\Small.sourcelink.json

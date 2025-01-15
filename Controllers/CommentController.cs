@@ -120,11 +120,11 @@ using System.Security.Claims;
 namespace Small.Controllers
 {
     [Authorize]
-    public class CommentController : Controller
+    public class CommentController : BaseController
     {
         private readonly ApplicationDbContext _context;
 
-        public CommentController(ApplicationDbContext context)
+        public CommentController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }

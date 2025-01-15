@@ -1,20 +1,21 @@
 ﻿@model IEnumerable<Small.Models.Post>
 
-<h2>Posts in @ViewBag.CategoryName</h2>
+<h2>@ViewBag.CategoryName</h2>
 
 @if (Model.Any())
 {
-        <ul>
+    <ul>
         @foreach (var post in Model)
         {
-                    <li>
-                        <a href="@Url.Action("Detail", "Post", new { id = post.Id })">@post.Title</a>
-                        <small>by @post.User.UserName on @post.CreatedAt.ToLocalTime()</small>
-                    </li>
+            <li>
+                <h4>@post.Title</h4>
+                <p>@post.Content</p>
+                <small>Yayınlanma Tarihi: @post.CreatedAt.ToString("dd/MM/yyyy")</small>
+            </li>
         }
-        </ul>
+    </ul>
 }
 else
 {
-        <p>No posts found in this category.</p>
+    <p>Bu kategoriye ait makale bulunamadı.</p>
 }

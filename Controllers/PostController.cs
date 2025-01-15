@@ -8,7 +8,9 @@ using System.Security.Claims;
 
 namespace Small.Controllers
 {
+
     [Authorize]
+    [ServiceFilter(typeof(CategoriesFilter))]
     public class PostController : BaseController
     {
         private readonly ApplicationDbContext _context;
@@ -490,19 +492,18 @@ namespace Small.Controllers
 
         public async Task<IActionResult> PostsByCategory(int categoryId)
         {
-
             var posts = await _context.Posts
                 .Include(p => p.User)
                 .Include(p => p.Category)
                 .Where(p => p.CategoryId == categoryId)
                 .ToListAsync();
 
-            var categoryName = _context.Categories
+            var categoryName = await _context.Categories
                 .Where(c => c.Id == categoryId)
                 .Select(c => c.Name)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
-            ViewBag.CategoryName = categoryName ?? "Unknown Category";
+            ViewBag.CategoryName = categoryName ?? "Kategori Bulunamadı";
 
             return View(posts);
         }

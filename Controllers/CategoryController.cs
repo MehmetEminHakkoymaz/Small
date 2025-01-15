@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Small.Data;
 using Small.Models;
+using Small.ViewModels;
 
 namespace Small.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class CategoryController : Controller
+    public class CategoryController : BaseController
     {
         private readonly ApplicationDbContext _context;
 
-        public CategoryController(ApplicationDbContext context)
+        public CategoryController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
@@ -82,5 +84,39 @@ namespace Small.Controllers
             TempData["SuccessMessage"] = "Category deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
+
+
+        [AllowAnonymous] // Herkes erişebilsin
+        public async Task<IActionResult> Posts(int id)
+        {
+            var category = await _context.Categories
+                .Include(c => c.Posts)
+                .ThenInclude(p => p.Comments)
+                .Include(c => c.Posts)
+                .ThenInclude(p => p.PostLikes)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            var model = new CategoryPostsViewModel
+            {
+                CategoryName = category.Name,
+                Posts = category.Posts.Select(p => new PostViewModel
+                {
+                    Title = p.Title,
+                    Content = p.Content,
+                    CreatedAt = p.CreatedAt,
+                    CommentCount = p.Comments.Count,
+                    LikeCount = p.PostLikes.Count,
+                    CategoryName = category.Name
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
     }
 }

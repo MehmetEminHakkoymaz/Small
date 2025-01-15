@@ -1,0 +1,41 @@
+﻿@model Small.ViewModels.ProfileViewModel
+
+<h2>Profil Sayfası</h2>
+
+<div>
+    <img src="@Model.ProfilePicture" alt="Profil Resmi" style="width: 150px; height: 150px;" />
+</div>
+<div>
+    <label>Ad Soyad:</label>
+    <span>@Model.FullName</span>
+</div>
+<div>
+    <label>Email:</label>
+    <span>@Model.Email</span>
+</div>
+<div>
+    <label>Hesap Oluşturulma Tarihi:</label>
+    <span>@Model.CreatedAt</span>
+</div>
+
+<h3>Yazılarım</h3>
+@if (Model.Posts.Any())
+{
+    <ul>
+        @foreach (var post in Model.Posts)
+        {
+            <li>
+                <h4>@post.Title</h4>
+                <p>@post.Content</p>
+                <p><strong>Kategori:</strong> @post.CategoryName</p>
+                <p><strong>Yorum Sayısı:</strong> @post.CommentCount</p>
+                <p><strong>Beğeni Sayısı:</strong> @post.LikeCount</p>
+                <small>Yayınlanma Tarihi: @post.CreatedAt</small>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Henüz makale yazmadınız.</p>
+}

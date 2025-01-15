@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Small.Data;
+using System.Linq;
 
 public class BaseController : Controller
 {
