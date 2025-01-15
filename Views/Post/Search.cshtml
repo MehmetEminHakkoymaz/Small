@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Small.Models.Post>
+@{
+    ViewData["Title"] = "Search Posts";
+}
+
+<h1>Search Posts</h1>
+
+<form method="get" asp-action="Search">
+    <div class="form-group">
+        <label for="keyword">Keyword:</label>
+        <input type="text" name="keyword" class="form-control" placeholder="Search by title or content" />
+    </div>
+
+    <div class="form-group">
+        <label for="category">Category:</label>
+        <select name="categoryId" class="form-control">
+            <option value="">All Categories</option>
+            @foreach (var category in ViewBag.Categories)
+            {
+                <option value="@category.Value">@category.Text</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<hr />
+
+@if (Model.Any())
+{
+    <ul>
+        @foreach (var post in Model)
+        {
+            <li>
+                <h3><a asp-action="Detail" asp-route-id="@post.Id">@post.Title</a></h3>
+                <p>@post.Content.Substring(0, Math.Min(100, post.Content.Length))...</p>
+                <p><strong>Category:</strong> @post.Category.Name</p>
+                <p><strong>Posted by:</strong> @post.User.UserName</p>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No posts found.</p>
+}

@@ -1,0 +1,15 @@
+﻿@model Small.Models.Post
+
+<h2>Edit Post</h2>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div>
+        <label>Title</label>
+        <input asp-for="Title" />
+    </div>
+    <div>
+        <label>Content</label>
+        <textarea asp-for="Content"></textarea>
+    </div>
+    <button type="submit">Save</button>
+</form>

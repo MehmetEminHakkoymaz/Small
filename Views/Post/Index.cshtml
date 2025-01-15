@@ -1,0 +1,134 @@
+﻿@* @model IEnumerable<Small.Models.Post>
+
+<h2>Posts</h2>
+
+<!-- Arama ve Filtreleme Formu -->
+<form method="get" asp-action="Index" class="mb-3">
+    <div class="row">
+        <!-- Arama Kutusu -->
+        <div class="col-md-6">
+            <input type="text" name="searchKeyword" class="form-control" placeholder="Search by title or content"
+                   value="@ViewData["SearchKeyword"]" />
+        </div>
+
+        <!-- Tarih Filtresi -->
+        <div class="col-md-4">
+            <select name="filterByDate" class="form-control">
+                <option value="">All Dates</option>
+                <option value="Last7Days" selected="@(ViewData["FilterByDate"]?.ToString() == "Last7Days")">Last 7 Days</option>
+                <option value="Last30Days" selected="@(ViewData["FilterByDate"]?.ToString() == "Last30Days")">Last 30 Days</option>
+                <option value="LastYear" selected="@(ViewData["FilterByDate"]?.ToString() == "LastYear")">Last Year</option>
+            </select>
+        </div>
+
+        <!-- Submit Butonu -->
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </div>
+</form>
+
+<hr />
+
+<!-- Post Listesi -->
+@if (Model.Any())
+{
+    <ul class="list-group">
+        @foreach (var post in Model)
+        {
+            <li class="list-group-item">
+                <h5>@post.Title</h5>
+                <p><strong>By:</strong> @post.User.UserName | <strong>Posted on:</strong> @post.CreatedAt.ToLocalTime()</p>
+                <p>@post.Content.Substring(0, Math.Min(100, post.Content.Length))...</p>
+                <a asp-action="Detail" asp-route-id="@post.Id" class="btn btn-info btn-sm">View Details</a>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No posts found matching your criteria.</p>
+}
+ *@
+
+
+@model IEnumerable<Small.Models.Post>
+
+<h2>Posts</h2>
+
+<!-- Arama ve Filtreleme Formu -->
+<form method="get" asp-action="Index" class="mb-3">
+    <div class="row">
+        <!-- Arama Kutusu -->
+        <div class="col-md-6">
+            <input type="text" name="searchKeyword" class="form-control" placeholder="Search by title or content"
+                   value="@ViewData["SearchKeyword"]" />
+        </div>
+
+        <!-- Tarih Filtresi -->
+        <div class="col-md-4">
+            <select name="filterByDate" class="form-control">
+                <option value="">All Dates</option>
+                <option value="Last7Days" selected="@(ViewData["FilterByDate"]?.ToString() == "Last7Days")">Last 7 Days</option>
+                <option value="Last30Days" selected="@(ViewData["FilterByDate"]?.ToString() == "Last30Days")">Last 30 Days</option>
+                <option value="LastYear" selected="@(ViewData["FilterByDate"]?.ToString() == "LastYear")">Last Year</option>
+            </select>
+        </div>
+
+        <!-- Submit Butonu -->
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </div>
+</form>
+
+<hr />
+
+<!-- Post Listesi -->
+@if (Model.Any())
+{
+    <ul class="list-group">
+        @foreach (var post in Model)
+        {
+            <li class="list-group-item">
+                <h5>@post.Title</h5>
+                <p><strong>By:</strong> @post.User.UserName | <strong>Posted on:</strong> @post.CreatedAt.ToLocalTime()</p>
+                <p>@post.Content.Substring(0, Math.Min(100, post.Content.Length))...</p>
+
+                <a asp-action="Detail" asp-route-id="@post.Id" class="btn btn-info btn-sm">View Details</a>
+
+                <!-- Edit ve Delete Butonları -->
+                @if (post.UserId == User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier))
+                {
+                    <form asp-action="Edit" method="get" style="display:inline;">
+                        <input type="hidden" name="id" value="@post.Id" />
+                        <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                    </form>
+                    <form asp-action="Delete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@post.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                }
+
+                <!-- Admin Delete Butonu -->
+                @if (User.IsInRole("Admin"))
+                {
+@*                     <form asp-action="AdminDelete" method="post" style="display:inline;">
+                        <input type="hidden" name="postId" value="@post.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm" style="color:red;">Admin Delete</button>
+                    </form>
+ *@
+                    <form asp-action="AdminDelete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@post.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Admin Delete</button>
+                    </form>
+
+                }
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No posts found matching your criteria.</p>
+}

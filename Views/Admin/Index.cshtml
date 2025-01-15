@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<h1>Admin Panel</h1>
+<p>Manage users, categories, and other administrative tasks here.</p>
+
+<div class="row">
+    <div class="col-md-4">
+        <h3>Quick Stats</h3>
+        <ul>
+            <li>Total Users: @ViewBag.UserCount</li>
+            <li>Total Posts: @ViewBag.PostCount</li>
+            <li>Total Categories: @ViewBag.CategoryCount</li>
+        </ul>
+    </div>
+
+    <div class="col-md-4">
+        <h3>Add New Category</h3>
+        <form asp-action="AddCategory" method="post">
+            <div class="form-group">
+                <label for="categoryName">Category Name</label>
+                <input type="text" name="categoryName" id="categoryName" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Add Category</button>
+        </form>
+    </div>
+</div>
+
+<hr />
+
+<h3>Existing Categories</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Category Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in ViewBag.Categories)
+        {
+            <tr>
+                <td>@category.Id</td>
+                <td>@category.Name</td>
+                <td>
+                    <form asp-action="DeleteCategory" method="post" style="display:inline;">
+                        <input type="hidden" name="categoryId" value="@category.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<ul>
+    <li><a asp-controller="Admin" asp-action="UserManagement">Manage Users</a></li>
+</ul>

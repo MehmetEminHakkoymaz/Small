@@ -1,0 +1,158 @@
+﻿@* @model Small.Models.Post
+
+<h2>@Model.Title</h2>
+<p>@Model.Content</p>
+<p><strong>Posted by:</strong> @Model.User.UserName</p>
+<p><strong>Created at:</strong> @Model.CreatedAt.ToLocalTime()</p>
+
+<hr />
+
+<h3>Comments:</h3>
+@if (Model.Comments != null && Model.Comments.Any())
+{
+    <ul>
+        @foreach (var comment in Model.Comments)
+        {
+            <li>
+                <strong>@comment.User.UserName:</strong> @comment.Content
+                <small>(@comment.CreatedAt.ToLocalTime())</small>
+                <br />
+                <small>Likes: @(comment.CommentLikes?.Count(cl => cl.IsLike) ?? 0) | Dislikes: @(comment.CommentLikes?.Count(cl => !cl.IsLike) ?? 0)</small>
+
+                <form asp-action="LikeComment" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="@comment.Id" />
+                    <button type="submit">👍 Like</button>
+                </form>
+                <form asp-action="DislikeComment" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="@comment.Id" />
+                    <button type="submit">👎 Dislike</button>
+                </form>
+
+                @if (comment.UserId == User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier))
+                {
+                    <form asp-action="EditComment" method="get" style="display:inline;">
+                        <input type="hidden" name="id" value="@comment.Id" />
+                        <button type="submit">Edit</button>
+                    </form>
+                    <form asp-action="DeleteComment" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@comment.Id" />
+                        <button type="submit">Delete</button>
+                    </form>
+                }
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <form asp-action="AdminDeleteComment" method="post" style="display:inline;">
+                        <input type="hidden" name="commentId" value="@comment.Id" />
+                        <input type="hidden" name="postId" value="@Model.Id" />
+                        <button type="submit" style="color:red;">Admin Delete</button>
+                    </form>
+                }
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No comments yet.</p>
+}
+
+<hr />
+
+<h4>Add a Comment:</h4>
+<form asp-action="CreateComment" method="post">
+    <input type="hidden" name="PostId" value="@Model.Id" />
+    <textarea name="Content" rows="4" cols="50" required></textarea>
+    <br />
+    <button type="submit">Submit</button>
+</form>
+ *@
+
+
+@model Small.Models.Post
+
+<h2>@Model.Title</h2>
+<p>@Model.Content</p>
+<p><strong>Posted by:</strong> @Model.User.UserName</p>
+<p><strong>Created at:</strong> @Model.CreatedAt.ToLocalTime()</p>
+
+<p>Total Likes: @Model.PostLikes.Count</p>
+
+<form asp-action="LikePost" method="post" style="display:inline;">
+    <input type="hidden" name="postId" value="@Model.Id" />
+    @if (Model.PostLikes.Any(pl => pl.UserId == User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier)))
+    {
+        <button type="submit" class="btn btn-danger">
+            <i class="fa fa-heart"></i> Unlike
+        </button>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-outline-danger">
+            <i class="fa fa-heart"></i> Like
+        </button>
+    }
+</form>
+
+<hr />
+
+<h3>Comments:</h3>
+@if (Model.Comments != null && Model.Comments.Any())
+{
+    <ul>
+        @foreach (var comment in Model.Comments)
+        {
+            <li>
+                <strong>@comment.User.UserName:</strong> @comment.Content
+                <small>(@comment.CreatedAt.ToLocalTime())</small>
+                <br />
+                <small>Likes: @(comment.CommentLikes?.Count(cl => cl.IsLike) ?? 0) | Dislikes: @(comment.CommentLikes?.Count(cl => !cl.IsLike) ?? 0)</small>
+
+                <form asp-action="LikeComment" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="@comment.Id" />
+                    <button type="submit">👍 Like</button>
+                </form>
+                <form asp-action="DislikeComment" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="@comment.Id" />
+                    <button type="submit">👎 Dislike</button>
+                </form>
+
+                @if (comment.UserId == User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier))
+                {
+                    <form asp-action="EditComment" method="get" style="display:inline;">
+                        <input type="hidden" name="id" value="@comment.Id" />
+                        <button type="submit">Edit</button>
+                    </form>
+                    <form asp-action="DeleteComment" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@comment.Id" />
+                        <button type="submit">Delete</button>
+                    </form>
+                }
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <form asp-action="AdminDeleteComment" method="post" style="display:inline;">
+                        <input type="hidden" name="commentId" value="@comment.Id" />
+                        <input type="hidden" name="postId" value="@Model.Id" />
+                        <button type="submit" style="color:red;">Admin Delete</button>
+                    </form>
+                }
+
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No comments yet.</p>
+}
+
+<hr />
+
+<h4>Add a Comment:</h4>
+<form asp-action="CreateComment" method="post">
+    <input type="hidden" name="PostId" value="@Model.Id" />
+    <textarea name="Content" rows="4" cols="50" required></textarea>
+    <br />
+    <button type="submit">Submit</button>
+</form>
